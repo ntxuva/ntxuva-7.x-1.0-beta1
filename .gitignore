@@ -1,0 +1,11 @@
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# Config
+######################
+settings.php
+sites/default/files
+sites/default/themes
