@@ -1,4 +1,48 @@
 (function($) {
+    log = console.log;
+    //set stats
+    $.ajax({
+        url: '/georeport/v2/requests.xml',
+        success: function(res){
+            var serviceNames = {},
+                freqService  = {}, 
+                countClosed  = 0,
+                countTime    = 0,
+                hours        = 0;
+
+            $('request', res).each(function(index, request){
+                var $status = $('status', request);
+
+                if ($status.length && $status.text() == 'closed') {
+                    var requested_datetime = $('requested_datetime', request).text(),
+                        updated_datetime   = $('updated_datetime', request).text(),
+                        reqDate = new Date(requested_datetime),
+                        upDate  = new Date(updated_datetime);
+
+                    if (typeof reqDate == 'object' && typeof upDate == 'object') {
+                        countClosed++;
+                        countTime += Math.abs(reqDate - upDate); 
+                    }
+                }
+
+                var service_name = $('service_name', request).text();
+
+                if (!serviceNames[service_name])
+                    serviceNames[service_name] = 1;
+                else
+                    serviceNames[service_name] = serviceNames[service_name]+ 1;
+
+                if (!freqService.name || freqService.count < serviceNames[service_name])
+                    freqService = {'name': service_name, 'count': serviceNames[service_name]};
+            });
+
+            hours = Math.floor((countTime / countClosed) / 1000 / 60 / 60);
+            $('.average-hours').text(hours);
+            $('.frequent-request-label').text(freqService.name);
+        }
+    });
+
+
   $(document).ready(function() {
 
     $('.field-label').addClass('label');
@@ -96,6 +140,7 @@
                 _self.$element.removeClass('active');
             }
         });
-  });
 
+  });
+    
 })(jQuery);
