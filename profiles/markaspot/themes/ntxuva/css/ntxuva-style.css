@@ -3874,8 +3874,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   	white-space: nowrap;
   	overflow: hidden;
     position: absolute;
-    top: 13px;
-    left: 5%;
+    top: 0px;
+    left: 0px;
   }
   
   
@@ -6162,15 +6162,15 @@ fieldset .panel-heading a.panel-title:hover {
   background-repeat: no-repeat;
 }
 .form-item-field-category-und.radio:nth-child(3) label {
-  background-image: url(../images/report1a.png);
+  background-image: url(../images/report3a.png);
   background-repeat: no-repeat;
 }
 .form-item-field-category-und.radio:nth-child(4) label {
-  background-image: url(../images/report1a.png);
+  background-image: url(../images/report4a.png);
   background-repeat: no-repeat;
 }
 .form-item-field-category-und.radio:nth-child(5) label {
-  background-image: url(../images/report1a.png);
+  background-image: url(../images/report5a.png);
   background-repeat: no-repeat;
 }
 
@@ -6185,17 +6185,17 @@ fieldset .panel-heading a.panel-title:hover {
   color: #F15722;
 }
 .form-item-field-category-und.radio.checked:nth-child(3) label {
-  background-image: url(../images/report1b.png);
+  background-image: url(../images/report3b.png);
   background-repeat: no-repeat;
   color: #F15722;
 }
 .form-item-field-category-und.radio.checked:nth-child(4) label {
-  background-image: url(../images/report1b.png);
+  background-image: url(../images/report4b.png);
   background-repeat: no-repeat;
   color: #F15722;
 }
 .form-item-field-category-und.radio.checked:nth-child(5) label {
-  background-image: url(../images/report1b.png);
+  background-image: url(../images/report5b.png);
   background-repeat: no-repeat;
   color: #F15722;
 }
