@@ -51,7 +51,7 @@
 //        var state = result.address.state ? result.address.state : "";
           var suburb = result.address.suburb ? result.address.suburb : "";
           var district = result.address.district ? result.address.district : "";
-//          
+//
           var city = result.address.city ? result.address.city : "";
           city = city ? city : result.address.village;
 
@@ -60,8 +60,13 @@
           var address = street + ', ' + postcode + ' ' + suburb + ', ' + city + ', ' + district;
 
 // Updates Maputo psms
-          var bairro = suburb + ', ' + district;
-//
+          var neighbourhood = suburb + ', ' + district;
+
+// Writes neighbourhood field
+
+          document.getElementById("edit-field-neighbourhood-und-0-value").disabled = false;
+          $('#edit-field-neighbourhood-und-0-value').val(neighbourhood);
+          document.getElementById("edit-field-neighbourhood-und-0-value").disabled = true;
 
           $('#edit-field-geo-und-0-address-field').val(address);
           // Drupal.geolocation.maps[i].setView(new L.LatLng(result.lat, result.lon));

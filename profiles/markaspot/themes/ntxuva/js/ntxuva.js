@@ -5,7 +5,7 @@
         url: '/georeport/v2/requests.xml',
         success: function(res){
             var serviceNames = {},
-                freqService  = {}, 
+                freqService  = {},
                 countClosed  = 0,
                 countTime    = 0,
                 hours        = 0;
@@ -21,7 +21,7 @@
 
                     if (typeof reqDate == 'object' && typeof upDate == 'object') {
                         countClosed++;
-                        countTime += Math.abs(reqDate - upDate); 
+                        countTime += Math.abs(reqDate - upDate);
                     }
                 }
 
@@ -84,6 +84,8 @@
       e.preventDefault();
       if (!url.split('#')[1] || url.match('1--')) {
 
+        document.getElementById("edit-field-neighbourhood-und-0-value").disabled = false;
+
         $('a:contains(2.)').tab('show');
         var hash = $('a:contains(2.)').attr('href');
          // animate
@@ -114,7 +116,7 @@
     function toggleCheck($radio) {
         var checked   = $radio.is(':checked'),
             $gChecked = [];
-     
+
         if (checked) {
             $radio.parent().addClass('checked').siblings('.checked').removeClass('checked');
         }
@@ -136,11 +138,11 @@
             focus: function(event) {
                 _self.$element.addClass('active');
             },
-            blur: function(event) {                
+            blur: function(event) {
                 _self.$element.removeClass('active');
             }
         });
 
   });
-    
+
 })(jQuery);
