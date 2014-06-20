@@ -1288,6 +1288,16 @@ div.list a h3 {
 }
 
 /* ux customization */
+/* custom icons */
+.icon-bug:before {
+  background: url("../images/report1a.png") no-repeat center center transparent;
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
 
 /* frontpage */
 
