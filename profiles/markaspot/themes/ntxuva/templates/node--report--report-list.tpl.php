@@ -123,6 +123,10 @@
     </footer>
   <?php endif; ?>
 
+	  <?php if (!empty($page['highlighted'])): ?>
+        <div class="highlighted hero-unit"><?php print render($page['highlighted']); ?></div>
+      <?php endif; ?>
+	
   <?php print render($content['comments']); ?>
 
 </article> <!-- /.node -->

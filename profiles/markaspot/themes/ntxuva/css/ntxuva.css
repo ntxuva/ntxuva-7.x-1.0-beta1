@@ -1173,6 +1173,12 @@ div.list a h3 {
     position: absolute;
     top: 40px;
   }
+	
+  .welcome-text.well {
+  margin: 4px 0;
+  background: none;
+  height: 60px;
+  }
 
   /*narrow form styles*/
   #geolocation-address-8-0 {
