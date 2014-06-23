@@ -69,6 +69,7 @@
           document.getElementById("edit-field-neighbourhood").style.visibility = "hidden";
 
           $('#edit-field-geo-und-0-address-field').val(address);
+          document.getElementById("edit-field-geo-und-0-address-field").disabled = true;
           // Drupal.geolocation.maps[i].setView(new L.LatLng(result.lat, result.lon));
           // Drupal.geolocation.setMapMarker(new L.LatLng(result.lat , result.lon),i);
         }

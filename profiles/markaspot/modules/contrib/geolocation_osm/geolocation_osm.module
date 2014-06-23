@@ -499,11 +499,11 @@ function geolocation_osm_field_widget_form(&$form, &$form_state, $field, $instan
         '#maxlength' => 120,
         '#size' => 50,
       );
-      $element['address']['geocode'] = array(
+   /*   $element['address']['geocode'] = array(
         '#prefix' => '<span id="geolocation-address-geocode-' . $id . '" class="geolocation-address-geocode">',
         '#suffix' => '</span>',
         '#markup' => t('Get location'),
-      );
+      ); */
       $element['help'] = array(
         '#prefix' => '<div id="geolocation-help-' . $id . '" class="geolocation-help">',
         '#suffix' => '</div>',

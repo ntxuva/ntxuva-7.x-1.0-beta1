@@ -106,6 +106,7 @@
                     }, 600, function(){
                     window.location.hash = hash;
                 });
+                document.getElementById("edit-field-geo-und-0-address-field").disabled = false;
                 $('#edit-submit').html(Drupal.t('Save'));
             }
             else if (currentHash.indexOf('3--') > -1 || currentHash.indexOf('---fotografia') > -1) {
