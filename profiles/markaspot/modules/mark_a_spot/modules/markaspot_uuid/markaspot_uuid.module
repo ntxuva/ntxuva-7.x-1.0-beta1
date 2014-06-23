@@ -13,7 +13,7 @@
 function markaspot_uuid_form_report_node_form_alter(&$form, &$form_state, $form_id) {
   // Disable neighbourhood field
   // will possibly be changed to hidden in the future, after debugging
-  $form['field_neighbourhood'][LANGUAGE_NONE][0]['value']['#disabled'] = TRUE;
+  // $form['field_neighbourhood'][LANGUAGE_NONE][0]['value']['#disabled'] = TRUE;
 
   // Hide the title form field as it is generated via hook_insert
   $form['title']['#type'] = "hidden";

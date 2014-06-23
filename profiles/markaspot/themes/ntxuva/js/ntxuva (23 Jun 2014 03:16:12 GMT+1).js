@@ -6,7 +6,7 @@
         url: '/georeport/v2/requests.xml',
         success: function(res){
             var serviceNames = {},
-                freqService  = {},
+                freqService  = {}, 
                 countClosed  = 0,
                 countTime    = 0,
                 hours        = 0;
@@ -22,7 +22,7 @@
 
                     if (typeof reqDate == 'object' && typeof upDate == 'object') {
                         countClosed++;
-                        countTime += Math.abs(reqDate - upDate);
+                        countTime += Math.abs(reqDate - upDate); 
                     }
                 }
 
@@ -42,7 +42,7 @@
             $('.frequent-request-label').text(freqService.name);
         }
     });
-
+    
     $(document).ready(function(){
         $('.field-label').addClass('label');
 
@@ -66,16 +66,16 @@
             $('html, body').animate(
                 {
                     scrollTop: $(linkHash).offset().top
-                },
-                600,
+                }, 
+                600, 
                 function(){
                     window.location.hash = linkHash;
                 }
             );
 
-            if (linkHash.indexOf('3--') > -1 || linkHash.indexOf('---fotografia') > -1)  {
+            if (linkHash.indexOf('3--') > -1 || linkHash.indexOf('---media') > -1)  {
                 $('.node-report-form #edit-submit').html(Drupal.t('Save'));
-            }
+            } 
             else {
                 $('.node-report-form #edit-submit').html(Drupal.t('Next'));
             }
@@ -86,17 +86,17 @@
             currentHash = document.location.hash.replace(/^#/, '');
             e.preventDefault();
 
-            if (!currentHash || currentHash.indexOf('1--') > -1 || currentHash.indexOf('---local') > -1) {
+            if (!currentHash || currentHash.indexOf('1--') > -1 || currentHash.indexOf('---location') > -1) {
                 $('a:contains(2.)').tab('show');
                 var hash = $('a:contains(2.)').attr('href');
                 // animate
                 $('html, body').animate({
-                    scrollTop: $(hash).offset().top - 30
+                    scrollTop: $(hash).offset().top - 30 
                     }, 600, function(){
                     window.location.hash = hash;
                 });
-            }
-            else if (currentHash.indexOf('2--') > -1 || currentHash.indexOf('---relatorio') > -1) {
+            } 
+            else if (currentHash.indexOf('2--') > -1 || currentHash.indexOf('---your-report') > -1) {
                 $('a:contains(3.)').tab('show');
 
                 var hash = $('a:contains(3.)').attr('href');
@@ -107,8 +107,8 @@
                     window.location.hash = hash;
                 });
                 $('#edit-submit').html(Drupal.t('Save'));
-            }
-            else if (currentHash.indexOf('3--') > -1 || currentHash.indexOf('---fotografia') > -1) {
+            } 
+            else if (currentHash.indexOf('3--') > -1 || currentHash.indexOf('---media') > -1) {
                 $('form').unbind('submit').submit();
             }
         });
@@ -119,7 +119,7 @@
         function toggleCheck($radio) {
             var checked   = $radio.is(':checked'),
                 $gChecked = [];
-
+         
             if (checked) {
                 $radio.parent().addClass('checked').siblings('.checked').removeClass('checked');
             }
@@ -141,10 +141,10 @@
                 focus: function(event) {
                     _self.$element.addClass('active');
                 },
-                blur: function(event) {
+                blur: function(event) {                
                     _self.$element.removeClass('active');
                 }
-            });
+            }); 
     });
-
+       
 })(jQuery);

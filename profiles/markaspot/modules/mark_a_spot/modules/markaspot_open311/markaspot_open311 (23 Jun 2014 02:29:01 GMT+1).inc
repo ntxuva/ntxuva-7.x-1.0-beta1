@@ -55,8 +55,8 @@ function markaspot_open311_requests_create($data) {
   $service_request = array();
 
   // Could be more validation here:
-  if (!isset($data->email) && !isset($data->phone)) {
-    markaspot_open311_process_services_error(t('Please provide a valid email address or phone number.'), 400);
+  if (!isset($data->email)) {
+    markaspot_open311_process_services_error(t('Please provide a valid email address.'), 400);
   }
 
   if (!isset($data->lat) || !isset($data->long)) {
@@ -258,7 +258,7 @@ function markaspot_open311_requests_index($page, $parameters) {
  *
  * @param array $args
  *   Arguments available for method
- *
+ * 
  * @return array
  *   $services, All available services
  */
@@ -275,10 +275,10 @@ function markaspot_open311_services_index($args) {
 /**
  * Callback for retrieving a service defintions.
  *
- * @param string $service_code
+ * @param string $service_code 
  *   $tid = service_code_id
  *
- * @return array
+ * @return array 
  *   $service
  */
 function markaspot_open311_services_retrieve($service_code) {
@@ -331,7 +331,7 @@ function markaspot_open311_node_map_request($node, $status, $parameters) {
 
   $request['agency_responsible'] = NULL;
   $request['service_notice'] = NULL;
-  $request['address_id'] = $node->field_neighbourhood[$node->language][0]['value'];
+  $request['address_id'] = NULL;
 
   $request['requested_datetime'] = date('c', $node->created);
   $request['updated_datetime'] = date('c', $node->changed);
@@ -411,8 +411,7 @@ function markaspot_open311_request_map_node($request) {
   $node->field_geo[$node->language][0]['lat'] = $request->lat;
   $node->field_geo[$node->language][0]['lng'] = $request->long;
 
-  if (isset($request->email)) $node->field_e_mail[$node->language][0]['value'] = $request->email;
-  if (isset($request->phone)) $node->field_phone[$node->language][0]['value'] = $request->phone;
+  $node->field_e_mail[$node->language][0]['value'] = $request->email;
 
   // File Handling:
   if (strstr($request->media_url, "http")) {

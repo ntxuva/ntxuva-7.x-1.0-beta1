@@ -50,23 +50,23 @@
 // Updates Maputo psms
 //        var state = result.address.state ? result.address.state : "";
           var suburb = result.address.suburb ? result.address.suburb : "";
-          var district = result.address.district ? result.address.district : "";
+          var city_district = result.address.city_district ? result.address.city_district : "";
 //
           var city = result.address.city ? result.address.city : "";
           city = city ? city : result.address.village;
 
           street      = result.address.house_number ? street + ' ' + result.address.house_number : street;
           var postcode    = result.address.postcode ? result.address.postcode : "";
-          var address = street + ', ' + postcode + ' ' + suburb + ', ' + city + ', ' + district;
+          var address = street + ', ' + postcode + ' ' + suburb + ', ' + city_district + ', ' + city;
 
 // Updates Maputo psms
-          var neighbourhood = suburb + ', ' + district;
+          var neighbourhood = suburb + ', ' + city_district;
 
 // Writes neighbourhood field
 
-          document.getElementById("edit-field-neighbourhood-und-0-value").disabled = false;
+          // document.getElementById("edit-field-neighbourhood-und-0-value").disabled = false;
           $('#edit-field-neighbourhood-und-0-value').val(neighbourhood);
-          document.getElementById("edit-field-neighbourhood-und-0-value").disabled = true;
+          document.getElementById("edit-field-neighbourhood").style.visibility = "hidden";
 
           $('#edit-field-geo-und-0-address-field').val(address);
           // Drupal.geolocation.maps[i].setView(new L.LatLng(result.lat, result.lon));
