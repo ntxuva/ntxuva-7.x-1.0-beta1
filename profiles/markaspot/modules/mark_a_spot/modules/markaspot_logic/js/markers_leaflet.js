@@ -41,7 +41,7 @@ var markerLayer, queryString;
 
     switch (pathId[0]) {
       case "map":
-        readData(1, arg, "All", "All");
+        readData(2, arg, "All", "All");
         arg = '';
         break;
 
@@ -100,10 +100,11 @@ var markerLayer, queryString;
       return false;
     });
 
+
     function getTaxId(id) {
       id = id.split("-");
       return id[1];
-    }
+    }	
 
     function readData(getToggle, arg, categoryCond, statusCond) {
       // markerLayer = new L.LayerGroup();

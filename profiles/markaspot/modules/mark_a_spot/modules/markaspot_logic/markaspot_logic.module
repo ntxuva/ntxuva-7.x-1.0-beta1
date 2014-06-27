@@ -604,6 +604,7 @@ function markaspot_logic_block_view($delta = '') {
  */
 function markaspot_logic_contents($which_block) {
   switch ($which_block) {
+
     case 'taxonomy_category':
       $list_category = NULL;
       $list_category .= '<div class="btn-group dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">' . t('Services') . ' <span class="caret"></span></button>';
@@ -615,6 +616,7 @@ function markaspot_logic_contents($which_block) {
       $list_category .= '<ul class="dropdown-menu">';
 
       $list_category .= '<li class="marker-category-wrapper-all">' . l(t('All'), '', array('attributes' => array('class' => 'map-menue-all marker-category'))) . '</li>';
+
       $taxonomies = taxonomy_get_tree(1, $parent = 0, $max_depth = 1, $load_entities = TRUE);
       foreach ($taxonomies as $term) {
         $list_category .= '<li class="marker-status-wrapper">' . l('<span class="icon-' . $term->field_category_icon[LANGUAGE_NONE][0]['value'] . '"></span> ' . views_trim_text($alter, check_plain($term->name)), 'taxonomy/term/' . $term->tid, array(
@@ -638,8 +640,8 @@ function markaspot_logic_contents($which_block) {
       $alter['max_length'] = 25;
       $alter['word_boundary'] = TRUE;
       $alter['ellipsis'] = TRUE;
-
       $list_status .= '<ul class="dropdown-menu">';
+
       $list_status .= '<li class="marker-status-wrapper-all">' . l(t('All'), '', array('attributes' => array('class' => 'map-menue-all marker-status'))) . '</li>';
 
       $taxonomies = taxonomy_get_tree(2, $parent = 0, $max_depth = 1, $load_entities = TRUE);
