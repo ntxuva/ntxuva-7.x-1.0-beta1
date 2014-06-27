@@ -15,8 +15,10 @@ function echo_requirements($phase) {
   $title = 'Echo test';
   $uniqid = uniqid();
   $content = "<div id='$uniqid'>Hello, world!</div>";
-  $theme = 'bartik';
+  //$theme = 'bartik';
+  $theme = variable_get('theme_default', 'bartik');
   if ($phase == 'runtime') {
+    libxml_use_internal_errors(true); //Disable libxml errors
     // The echo_themed_page() function should be available at this point.
     $document = new DomDocument();
     $document->loadHTML(echo_themed_page($title, $content, $theme));

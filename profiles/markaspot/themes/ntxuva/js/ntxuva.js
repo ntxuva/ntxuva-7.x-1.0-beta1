@@ -5,11 +5,13 @@
     $.ajax({
         url: '/georeport/v2/requests.xml',
         success: function(res){
-            var serviceNames = {},
-                freqService  = {},
-                countClosed  = 0,
-                countTime    = 0,
-                hours        = 0;
+            var serviceNames  = {},
+                locationNames = {},
+                freqService   = {},
+                freqLocation  = {},
+                countClosed   = 0,
+                countTime     = 0,
+                hours         = 0;
 
             $('request', res).each(function(index, request){
                 var $status = $('status', request);
@@ -28,18 +30,33 @@
 
                 var service_name = $('service_name', request).text();
 
-                if (!serviceNames[service_name])
-                    serviceNames[service_name] = 1;
-                else
-                    serviceNames[service_name] = serviceNames[service_name]+ 1;
+                if (service_name) {
+                    if (!serviceNames[service_name])
+                        serviceNames[service_name] = 1;
+                    else
+                        serviceNames[service_name] = serviceNames[service_name] + 1;
 
-                if (!freqService.name || freqService.count < serviceNames[service_name])
-                    freqService = {'name': service_name, 'count': serviceNames[service_name]};
+                    if (!freqService.name || freqService.count < serviceNames[service_name])
+                        freqService = {'name': service_name, 'count': serviceNames[service_name]};
+                }
+
+                var location_name = $('address_id', request).text().split(',')[0];
+
+                if (location_name) {
+                    if (!locationNames[location_name])
+                        locationNames[location_name] = 1;
+                    else
+                        locationNames[location_name] = locationNames[location_name] + 1;
+
+                    if (!freqLocation.name || freqLocation.count < locationNames[location_name])
+                        freqLocation = {'name': location_name, 'count': locationNames[location_name]};
+                }
             });
 
             hours = Math.floor((countTime / countClosed) / 1000 / 60 / 60);
             $('.average-hours').text(hours);
             $('.frequent-request-label').text(freqService.name);
+            $('.frequent-location-label').text(freqLocation.name);
         }
     });
 

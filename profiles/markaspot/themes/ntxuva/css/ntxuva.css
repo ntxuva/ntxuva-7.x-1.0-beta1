@@ -1289,7 +1289,7 @@ div.list a h3 {
 
 /* ux customization */
 /* custom icons */
-.icon-bug:before {
+.node-report .icon-bug:before {
   background: url("../images/report1a.png") no-repeat center center transparent;
   content: "";
   display: block;

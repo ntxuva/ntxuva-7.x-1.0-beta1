@@ -327,11 +327,12 @@ function markaspot_open311_node_map_request($node, $status, $parameters) {
     $request['service_name'] = $term['category']->name;
   }
 
-  $request['description'] = $node->body[$node->language][0]['value'];
+  if (isset($node->body[$node->language][0]['value'])) $request['description'] = $node->body[$node->language][0]['value'];
 
   $request['agency_responsible'] = NULL;
   $request['service_notice'] = NULL;
-  $request['address_id'] = $node->field_neighbourhood[$node->language][0]['value'];
+    
+  if (isset($node->field_neighbourhood[$node->language][0]['value'])) $request['address_id'] = $node->field_neighbourhood[$node->language][0]['value'];
 
   $request['requested_datetime'] = date('c', $node->created);
   $request['updated_datetime'] = date('c', $node->changed);
