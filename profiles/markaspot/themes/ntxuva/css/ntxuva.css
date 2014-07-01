@@ -1289,8 +1289,44 @@ div.list a h3 {
 
 /* ux customization */
 /* custom icons */
-.node-report .icon-bug:before {
+.node-report .icon-remove:before {
   background: url("../images/report1a.png") no-repeat center center transparent;
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+.node-report .icon-fire:before {
+  background: url("../images/report2a.png") no-repeat center center transparent;
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+.node-report .icon-bug:before {
+  background: url("../images/report3a.png") no-repeat center center transparent;
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+.node-report .icon-truck:before {
+  background: url("../images/report4a.png") no-repeat center center transparent;
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100px;
+}
+.node-report .icon-spam:before {
+  background: url("../images/report5a.png") no-repeat center center transparent;
   content: "";
   display: block;
   height: 100px;

@@ -6830,6 +6830,18 @@ border-color: #EEE #EEE @gray-lighter;
 
 /* frontpage */
 
+#loading {	
+  margin-left: -15px;
+  width: 187px;
+  height: 50px;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background:url(../loading.gif) no-repeat;
+  z-index: 1000;
+  position: relative;
+}
+
 .col-wrapper {
 		width: 80%;
 		color: #fff;
@@ -6976,8 +6988,8 @@ top: 18px;
   	margin-left:1em;
   }
   .navbar-inverse {
-  		background-color: #000;
-  		border-color: #000;
+  		background-color: #fff;
+  		border-color: #fff;
   }
    .button-secondary {margin-right: -1em}
 
@@ -6985,14 +6997,27 @@ top: 18px;
 .navbar-inverse .navbar-brand {
 
   margin-left: -15px;
-  background: url('../images/logo_bw.png') no-repeat 0 0;
+  background: url('../logo.png') no-repeat 0 0;
   width: 187px;
   height: 50px;
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
-
 } 
+	
+#loading {
+
+  margin-left: -15px;
+  background:url(../loading.gif) no-repeat 0 0;
+  width: 187px;
+  height: 50px;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+
   .mapheader {
     color: #fff;
     text-align: center;

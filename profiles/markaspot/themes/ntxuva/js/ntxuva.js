@@ -26,7 +26,7 @@
                         countClosed++;
                         countTime += Math.abs(reqDate - upDate);
                     }
-                }
+                } 
 
                 var service_name = $('service_name', request).text();
 
@@ -164,5 +164,8 @@
                 }
             });
     });
-
+    
+    $(window).load(function(){
+        $('#loading').fadeOut(0);
+    });
 })(jQuery);
