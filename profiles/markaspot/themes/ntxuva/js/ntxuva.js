@@ -1,10 +1,8 @@
 (function($) {
     log = console.log;
 
-    //set stats
-    $.ajax({
-        url: '/georeport/v2/requests.xml',
-        success: function(res){
+    var HomePageStats = {
+        parse: function(){
             var serviceNames  = {},
                 locationNames = {},
                 freqService   = {},
@@ -13,7 +11,7 @@
                 countTime     = 0,
                 hours         = 0;
 
-            $('request', res).each(function(index, request){
+            $('request', this.res).each(function(index, request){
                 var $status = $('status', request);
 
                 if ($status.length && $status.text() == 'closed') {
@@ -26,7 +24,7 @@
                         countClosed++;
                         countTime += Math.abs(reqDate - upDate);
                     }
-                } 
+                }
 
                 var service_name = $('service_name', request).text();
 
@@ -57,10 +55,104 @@
             $('.average-hours').text(hours);
             $('.frequent-request-label').text(freqService.name);
             $('.frequent-location-label').text(freqLocation.name);
+        },
+        init: function(){
+            var _self = this;
+
+            if (!$('body').hasClass('front'))
+                return;
+
+            $.ajax({
+                url: '/georeport/v2/requests.xml',
+                success: function(res){
+                    _self.res = res;
+                    _self.parse();
+                }
+            });
         }
-    });
+    };
+
+    var ChartsPage = {
+        chartColorMapping: {
+            'service': {},
+            'status' : {},
+            'address': {}
+        },
+        parse: function(){
+            var serviceNames  = {},
+                serviceMarkup = [],
+
+                statusNames   = {},
+                statusMarkup  = [],
+
+                addressNames  = {},
+                addressMarkup = [];
+
+            $('request', res).each(function(index, request){
+                var service_name = $('service_name', request).text(),
+                    status_name  = $('status', request).text(),
+                    address_name = $('address_id', request).text();
+
+                if (service_name) {
+                    var serviceNameEncode = encodeURIComponent(service_name);
+                    if (!serviceNames[serviceNameEncode]) {
+                        serviceNames[serviceNameEncode] = 1;
+                        serviceMarkup.push('<option value="' + serviceNameEncode + '">' + service_name + '</option>');
+                        if (!this.chartColorMapping.service[serviceNameEncode]) {
+                            this.chartColorMapping.service[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                        }
+                    }
+                }
+
+                if (status_name) {
+                    var statusNameEncode = encodeURIComponent(status_name);
+                    if (!statusNames[statusNameEncode]) {
+                        statusNames[statusNameEncode] = 1;
+                        statusMarkup.push('<option value="' + statusNameEncode + '">' + status_name + '</option>');
+
+                        if (!this.chartColorMapping.status[serviceNameEncode]) {
+                            this.chartColorMapping.status[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                        }
+                    }
+                }
+
+                if (address_name) {
+                    var addressNameEncode = encodeURIComponent(address_name);
+                    if (!addressNames[addressNameEncode]) {
+                        addressNames[addressNameEncode] = 1;
+                        addressMarkup.push('<option value="' + addressNameEncode + '">' + address_name + '</option>');
+
+                        if (!this.chartColorMapping.address[serviceNameEncode]) {
+                            this.chartColorMapping.address[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                        }
+                    }
+                }
+            });
+
+            $('#form-select-category').append(serviceMarkup.join(''));
+            $('#form-select-status').append(statusMarkup.join(''));
+            $('#form-select-address').append(addressMarkup.join(''));
+        },
+        init: function(){
+            var _self = this;
+
+            if (!$('.relatorio-page').length)
+                return;
+
+            $.ajax({
+                url: '/georeport/v2/requests.xml',
+                success: function(res){
+                    _self.res = res;
+                    _self.parse();
+                }
+            });
+        }
+    };
 
     $(document).ready(function(){
+        HomePageStats.init();
+        ChartsPage.init();
+        
         $('.field-label').addClass('label');
 
         $('.geolocation-address-geocode, .geolocation-client-location, .geolocation-remove').addClass('btn');
