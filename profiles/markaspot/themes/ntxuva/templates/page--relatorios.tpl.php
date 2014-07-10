@@ -52,48 +52,72 @@
             <a id="main-content"></a>
             <h1 class="page-header">Relatórios</h1>
             <div class="region region-content">
-                <div class="form-dropdown-menus">
-                    <div class="form-select-element">
-                        <label class="form-label label-category">Categorias</label>
-                        <select id="form-select-category" class="form-control form-select">
-                            <option value="">Please category</option>
-                        </select>
+                <div class="form-dropdown-menus clearfix">
+                    <div class="section-icon">
+                        <span class="icon-categorias"></span>
                     </div>
-                    <div class="form-select-element">
-                        <label class="form-label label-status">Estados</label>
-                        <select id="form-select-status" class="form-control form-select">
-                            <option value="">Please status</option>
-                        </select>
-                    </div>
-                    <div class="form-select-element">
-                        <label class="form-label label-address">Bairros</label>
-                        <select id="form-select-address" class="form-control form-select">
-                            <option value="">Please address</option>
-                        </select>
+                    <div class="section-content">
+                        <div class="form-select-element">
+                            <label class="form-label label-category">Categorias</label>
+                            <select id="category-form-select" name="category-form-select" class="form-control form-select">
+                                <option value="">Please select category</option>
+                            </select>
+                        </div>
+                        <div class="form-select-element">
+                            <label class="form-label label-status">Estados</label>
+                            <select id="status-form-select" name="status-form-select" class="form-control form-select">
+                                <option value="">Please select status</option>
+                            </select>
+                        </div>
+                        <div class="form-select-element">
+                            <label class="form-label label-address">Bairros</label>
+                            <select id="address-form-select" name="address-form-select" class="form-control form-select">
+                                <option value="">Please select address</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="section-pie-charts">
-                    <div class="chart-container">
-                        <canvas id="categoriesPieChart" width="400" height="400"></canvas>
-                        <label>Categorias</label>
-                        <div class="chart-legend"></div>
+                
+                <div class="section-pie-charts clearfix">
+                    <div class="section-icon">
+                        <span class="icon-pies"></span>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="statusPieChart" width="400" height="400"></canvas>
-                        <label>Estados</label>
-                        <div class="chart-legend"></div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="addressPieChart" width="400" height="400"></canvas>
-                        <label>Bairros</label>
-                        <div class="chart-legend"></div>
+                    <div class="section-content">
+                        <div id="service-chart" class="chart-container">
+                            <canvas width="200" height="200"></canvas>
+                            <label>Categorias</label>
+                            <ul class="chart-legend"></ul>
+                        </div>
+                        <div id="status-chart" class="chart-container">
+                            <canvas width="200" height="200"></canvas>
+                            <label>Estados</label>
+                            <ul class="chart-legend"></ul>
+                        </div>
+                        <div id="address-chart" class="chart-container">
+                            <canvas width="200" height="200"></canvas>
+                            <label>Bairros</label>
+                            <ul class="chart-legend"></ul>
+                        </div>
                     </div>
                 </div>
                 <div class="section-dates">
-                    
+                    <div class="section-icon">
+                        <span class="icon-time"></span>
+                    </div>
+                    <div class="section-content">
+                        <label class="year-label">Select Year</label>
+                        <select id="year-form-select" name="year-form-select" class="form-control form-select"></select>                        
+                        <ul class="months-list"></ul>
+                        <label class="month-label">Select Month</label>
+                    </div>
                 </div>
                 <div class="section-line-chart">
-                    <canvas id="lineChart" width="400" height="400"></canvas>
+                    <div class="section-icon">
+                        <span class="icon-stats"></span>
+                    </div>
+                    <div class="section-content">
+                        <canvas id="line-chart" width="900" height="400"></canvas>
+                    </div>
                 </div>
             </div>
         </section>

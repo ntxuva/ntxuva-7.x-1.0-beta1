@@ -25,6 +25,7 @@ regions[page_bottom]    = 'Page bottom'
 
 stylesheets[all][] = css/ntxuva-style.css
 stylesheets[all][] = css/ntxuva.css
+stylesheets[all][] = css/charts.css
 
 
 ; For information on choosing the desired method, please read the Drupal

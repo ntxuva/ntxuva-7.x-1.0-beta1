@@ -1,6 +1,49 @@
-(function($) {
+if (typeof console.log != 'undefined')    
     log = console.log;
 
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (searchElement, fromIndex) {
+        if ( this === undefined || this === null ) {
+            throw new TypeError( '"this" is null or not defined' );
+        }
+
+        var length = this.length >>> 0; // Hack to convert object.length to a UInt32
+
+        fromIndex = +fromIndex || 0;
+
+        if (Math.abs(fromIndex) === Infinity) {
+            fromIndex = 0;
+        }
+
+        if (fromIndex < 0) {
+            fromIndex += length;
+            if (fromIndex < 0) {
+                fromIndex = 0;
+            }
+        }
+
+        for (;fromIndex < length; fromIndex++) {
+            if (this[fromIndex] === searchElement) {
+            return fromIndex;
+            }
+        }
+
+        return -1;
+    };
+}
+
+Date.prototype.getMonthWeek = function(){
+    var firstDay = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+    return Math.ceil((this.getDate() + firstDay)/7);
+};
+
+Chart.defaults.global.animation = false;
+
+var lang_pt = {
+    "months": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+};
+
+(function($) {
     var HomePageStats = {
         parse: function(){
             var serviceNames  = {},
@@ -73,65 +116,412 @@
     };
 
     var ChartsPage = {
-        chartColorMapping: {
+        inited: false,
+        chartDataMapping: {
             'service': {},
             'status' : {},
             'address': {}
         },
+        chartsColors: {
+            'service': {},
+            'status' : {},
+            'address': {}
+        },
+        line_chart: {},
+        dates: {},
         parse: function(){
-            var serviceNames  = {},
+            var _self = this,
+
                 serviceMarkup = [],
-
-                statusNames   = {},
                 statusMarkup  = [],
+                addressMarkup = [],
 
-                addressNames  = {},
-                addressMarkup = [];
+                _serviceData  = (_self.chartDataMapping.service = {}),
+                _statusData   = (_self.chartDataMapping.status  = {}),
+                _addressData  = (_self.chartDataMapping.address = {}),
 
-            $('request', res).each(function(index, request){
+                serviceSelected = this.$categorySelect.val(),
+                statusSelected  = this.$statusSelect.val(),
+                addressSelected = this.$addressSelect.val();
+
+            this.line_chart = {};
+            this.dates      = {};
+
+            $('request', this.res).each(function(index, request){
                 var service_name = $('service_name', request).text(),
                     status_name  = $('status', request).text(),
-                    address_name = $('address_id', request).text();
+                    address_name = $('address_id', request).text(),
+                    req_datetime = $('requested_datetime', request).text(),
+
+                    serviceNameEncode = encodeURIComponent(service_name),
+                    statusNameEncode  = encodeURIComponent(status_name),
+                    addressNameEncode = encodeURIComponent(address_name),
+
+                    colorBase;
 
                 if (service_name) {
-                    var serviceNameEncode = encodeURIComponent(service_name);
-                    if (!serviceNames[serviceNameEncode]) {
-                        serviceNames[serviceNameEncode] = 1;
-                        serviceMarkup.push('<option value="' + serviceNameEncode + '">' + service_name + '</option>');
-                        if (!this.chartColorMapping.service[serviceNameEncode]) {
-                            this.chartColorMapping.service[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                    if ((!serviceSelected || serviceSelected == serviceNameEncode) && (!statusSelected || statusSelected == statusNameEncode) && (!addressSelected || addressSelected == addressNameEncode)) {
+                        if (!_serviceData[serviceNameEncode]) {
+                            colorBase = _self.chartsColors.service[serviceNameEncode] || (_self.chartsColors.service[serviceNameEncode] = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)));
+
+                            _serviceData[serviceNameEncode] = {
+                                'label': service_name,
+                                'value': 1,
+                                'color': colorBase + ', 0.7)',
+                                'highlight': colorBase + ', 1)'
+                            };
+
+                            serviceMarkup.push('<option value="' + serviceNameEncode + '">' + service_name + '</option>');
+                        }
+                        else {
+                            _serviceData[serviceNameEncode].value = _serviceData[serviceNameEncode].value + 1;
                         }
                     }
                 }
 
                 if (status_name) {
-                    var statusNameEncode = encodeURIComponent(status_name);
-                    if (!statusNames[statusNameEncode]) {
-                        statusNames[statusNameEncode] = 1;
-                        statusMarkup.push('<option value="' + statusNameEncode + '">' + status_name + '</option>');
+                    if ((!statusSelected || statusSelected == statusNameEncode) && (!serviceSelected || serviceSelected == serviceNameEncode) && (!addressSelected || addressSelected == addressNameEncode)) {
+                        if (!_statusData[statusNameEncode]) {
+                            colorBase = _self.chartsColors.status[statusNameEncode] || (_self.chartsColors.status[statusNameEncode] = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)));
 
-                        if (!this.chartColorMapping.status[serviceNameEncode]) {
-                            this.chartColorMapping.status[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                            _statusData[statusNameEncode] = {
+                                'label': status_name,
+                                'value': 1,
+                                'color': colorBase + ', 0.7)',
+                                'highlight': colorBase + ', 1)'
+                            };
+
+                            statusMarkup.push('<option value="' + statusNameEncode + '">' + status_name + '</option>');
+                        }
+                        else {
+                            _statusData[statusNameEncode].value = _statusData[statusNameEncode].value + 1;
                         }
                     }
                 }
 
                 if (address_name) {
-                    var addressNameEncode = encodeURIComponent(address_name);
-                    if (!addressNames[addressNameEncode]) {
-                        addressNames[addressNameEncode] = 1;
-                        addressMarkup.push('<option value="' + addressNameEncode + '">' + address_name + '</option>');
+                    if ((!addressSelected) && (!serviceSelected || serviceSelected == serviceNameEncode) && (!serviceSelected || serviceSelected == serviceNameEncode)) {
+                        if (!_addressData[addressNameEncode]) {
+                            colorBase = _self.chartsColors.address[addressNameEncode] || (_self.chartsColors.address[addressNameEncode] = 'rgba(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)));
 
-                        if (!this.chartColorMapping.address[serviceNameEncode]) {
-                            this.chartColorMapping.address[serviceNameEncode] = Math.floor(Math.random()*16777215).toString(16);
+                            _addressData[addressNameEncode] = {
+                                'label': address_name,
+                                'value': 1,
+                                'color': colorBase + ', 0.7)',
+                                'highlight': colorBase + ', 1)'
+                            };
+
+                            addressMarkup.push('<option value="' + addressNameEncode + '">' + address_name + '</option>');
+                        }
+                        else {
+                            _addressData[addressNameEncode].value = _addressData[addressNameEncode].value + 1;
                         }
                     }
                 }
+
+                if (req_datetime) {
+                    var req_date  = new Date(req_datetime),
+                        req_year  = req_date.getFullYear(),
+                        req_month = req_date.getMonth();
+
+                    if (!_self.dates[req_year]) {
+                        _self.dates[req_year] = [];   
+                        for (var i = 0, l = lang_pt.months.length; i < l; i++) {
+                            _self.dates[req_year].push({name: lang_pt.months[i], active: false});
+                        }
+                    }
+
+                    _self.dates[req_year][req_month].active = true;
+
+                    if (!_self.line_chart[req_year])
+                        _self.line_chart[req_year] = [];
+
+                    if (!_self.line_chart[req_year][req_month])
+                        _self.line_chart[req_year][req_month] = [];
+
+                    _self.line_chart[req_year][req_month].push(request);
+                }
             });
 
-            $('#form-select-category').append(serviceMarkup.join(''));
-            $('#form-select-status').append(statusMarkup.join(''));
-            $('#form-select-address').append(addressMarkup.join(''));
+            if (!this.inited) {
+                this.$categorySelect.append(serviceMarkup.join(''));
+                this.$statusSelect.append(statusMarkup.join(''));
+                this.$addressSelect.append(addressMarkup.join(''));
+
+                this.generateDates();
+            }
+
+            this.renderGraphs();
+
+            if (serviceSelected || statusSelected || addressSelected) {
+                this.renderLineGraph();            
+            }
+        },
+        renderLineGraph: function(){
+            var _self         = this,
+                datasets      = {},
+                yearSelected  = this.$yearSelect.val(),
+                activeMonth   = this.$monthsList.find('.active:eq(0)'),
+                lineGraphData = {
+                    'labels': lang_pt.months,
+                    'datasets': []
+                },
+
+                serviceSelected = this.$categorySelect.val(),
+                statusSelected  = this.$statusSelect.val(),
+                addressSelected = this.$addressSelect.val(),
+
+                serviceName, statusName, serviceNameEncode, statusNameEncode, requestedDate;
+
+            if (this.timelineChart) {
+                this.timelineChart.destroy();
+            }
+
+            _data = this.line_chart[yearSelected];
+
+            if (serviceSelected || addressSelected) {
+                $.each(this.chartDataMapping.status, function(index, status){
+                    var colorBase = _self.chartsColors.status[index];
+
+                    datasets[index] = {
+                        label: status.label,
+                        fillColor: colorBase + ', 0.2)',
+                        strokeColor: colorBase + ', 1)',
+                        pointColor: colorBase + ', 1)',
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: colorBase + ', 1)',
+                        data: []
+                    };
+                });
+            }
+
+            if (statusSelected || addressSelected) {
+                $.each(this.chartDataMapping.service, function(index, service){
+                    var colorBase = _self.chartsColors.service[index];
+
+                    datasets[index] = {
+                        label: service.label,
+                        fillColor: colorBase + ', 0.2)',
+                        strokeColor: colorBase + ', 1)',
+                        pointColor: colorBase + ', 1)',
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: colorBase + ', 1)',
+                        data: []
+                    };
+                });
+            }
+
+            if (statusSelected && serviceSelected) {
+                $.each(this.chartDataMapping.address, function(index, address){
+                    var colorBase = _self.chartsColors.address[index];
+
+                    datasets[index] = {
+                        label: address.label,
+                        fillColor: colorBase + ', 0.2)',
+                        strokeColor: colorBase + ', 1)',
+                        pointColor: colorBase + ', 1)',
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: colorBase + ', 1)',
+                        data: []
+                    };
+                });
+            }
+
+            if (activeMonth.length) {
+                _data = _data[activeMonth.data('id')];
+                lineGraphData.labels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'];
+                //loop for each request for the selected month
+                for (var i = 0, l = _data.length, c; i < l; i++) {
+                    c = _data[i];
+                    requestedDate = new Date($('requested_datetime', c).text());
+                    parseRequestData(c, requestedDate.getMonthWeek() - 1);
+                }
+            }
+            else {
+                //loop throught each month
+                for (var i = 0, l = _data.length, c; i < l; i++) {
+                    c = _data[i];
+
+                    if (!c)
+                        continue;
+
+                    //loop for each request for this month
+                    for (var j = 0, l2 = c.length; j < l2; j++) {
+                        parseRequestData(c[j], i);
+                    }
+                }
+            }
+
+            function parseRequestData(reqData, arrayIndex){
+                serviceName = $('service_name', reqData).text();
+                statusName  = $('status', reqData).text();
+                addressName = $('address_id', reqData).text();
+
+                serviceNameEncode = encodeURIComponent(serviceName);
+                statusNameEncode  = encodeURIComponent(statusName);
+                addressNameEncode = encodeURIComponent(addressName);
+                
+                if (datasets[serviceNameEncode]) {
+                    if (!datasets[serviceNameEncode].data[arrayIndex])
+                        datasets[serviceNameEncode].data[arrayIndex] = 1;
+                    else
+                        datasets[serviceNameEncode].data[arrayIndex]++;
+                }
+
+                if (datasets[statusNameEncode]) {
+                    if (!datasets[statusNameEncode].data[arrayIndex])
+                        datasets[statusNameEncode].data[arrayIndex] = 1;
+                    else
+                        datasets[statusNameEncode].data[arrayIndex]++;
+                }
+
+                if (datasets[addressNameEncode]) {
+                    if (!datasets[addressNameEncode].data[arrayIndex])
+                        datasets[addressNameEncode].data[arrayIndex] = 1;
+                    else
+                        datasets[addressNameEncode].data[arrayIndex]++;
+                }
+            }
+
+            lineGraphData.datasets = $.map(datasets, function(dataset){
+                if (activeMonth.length) {
+                    for (var i = 0, l = 5; i < l; i++) {
+                        if (!dataset.data[i])
+                            dataset.data[i] = 0;
+                    }
+                }
+                else {
+                    for (var i = 0, l = 12; i < l; i++) {
+                        if (!dataset.data[i])
+                            dataset.data[i] = 0;
+                    }
+                }
+                
+                return dataset;
+            });
+
+            if (!lineGraphData.datasets.length)
+                return;
+            
+            this.timelineChart = new Chart(this.$timelineChart.get(0).getContext("2d")).Line(lineGraphData, {
+                                    bezierCurve: false
+                                });
+        },
+        renderGraphs: function(){
+            var _self = this;
+
+            this.servicePieChart.clear();
+            this.statusPieChart.clear();
+            this.addressPieChart.clear();
+
+            this.servicePieChart.segments = [];
+            this.statusPieChart.segments = [];
+            this.addressPieChart.segments = [];
+
+            //service chart
+            $.each(this.chartDataMapping.service, function(i, c){
+                _self.servicePieChart.addData(c);
+            });
+            this.servicePieChart.update();
+            this.$serviceChart.find('.chart-legend:eq(0)').html(this.generateLegend(this.chartDataMapping.service).join(''));
+
+            //status chart
+            $.each(this.chartDataMapping.status, function(i, c){
+                _self.statusPieChart.addData(c);
+            });
+            this.statusPieChart.update();
+            this.$statusChart.find('.chart-legend:eq(0)').html(this.generateLegend(this.chartDataMapping.status).join(''));
+            
+            //address chart
+            $.each(this.chartDataMapping.address, function(i, c){
+                _self.addressPieChart.addData(c);
+            });
+            this.addressPieChart.update();
+            this.$addressChart.find('.chart-legend:eq(0)').html(this.generateLegend(this.chartDataMapping.address).join(''));
+        },
+        generateLegend: function(data){
+            return $.map(data, function(c){
+                return '<li style="color:' + c.color + '">' + c.label + '</li>';
+            });
+        },
+        generateDates: function(){
+            var selectedYear = this.$yearSelect.val(),
+                yearsDD      = [],
+                monthsList   = [];
+
+            for (var i in this.dates) {
+                yearsDD.push('<option value="' + i + '">' + i + '</option>');
+                if (!selectedYear)
+                    selectedYear = i;
+            }
+
+            var _year = this.dates[selectedYear];
+
+            for (var i = 0, l = _year.length; i < l; i++) {
+                monthsList.push('<li class=' + (_year[i].active ? ('"enabled" data-id="' + i + '"') : "") + '>' + _year[i].name + '</li>');
+            }
+
+            if (!this.inited) {
+                this.$yearSelect.append(yearsDD.join(''));
+            }
+
+            this.$monthsList.append(monthsList.join(''));
+        },
+        hooks: function(){
+            var _self = this;
+
+            this.$serviceChart  = $('#service-chart');
+            this.$statusChart   = $('#status-chart');
+            this.$addressChart  = $('#address-chart');
+            this.$timelineChart = $('#line-chart');
+            this.$yearSelect    = $('#year-form-select');
+            this.$monthsList    = $('.months-list');
+            this.$categorySelect = $('#category-form-select');
+            this.$statusSelect   = $('#status-form-select');
+            this.$addressSelect  = $('#address-form-select');
+
+            this.servicePieChart = new Chart(this.$serviceChart.find('canvas').get(0).getContext("2d")).Pie([]);
+            this.statusPieChart  = new Chart(this.$statusChart.find('canvas').get(0).getContext("2d")).Pie([]);
+            this.addressPieChart = new Chart(this.$addressChart.find('canvas').get(0).getContext("2d")).Pie([]);
+
+            this.$categorySelect.on({
+                change: function(event){
+                    _self.parse();
+                }
+            });
+
+            this.$statusSelect.on({
+                change: function(event){
+                    _self.parse();
+                }
+            });
+
+            this.$addressSelect.on({
+                change: function(event){
+                    _self.parse();
+                }
+            });
+
+            this.$monthsList.on({
+                click: function(event){
+                    var $eventTrigger = $(event.target);
+
+                    if ($eventTrigger.hasClass('enabled')) {
+                        if ($eventTrigger.hasClass('active')) {
+                            $eventTrigger.removeClass('active');
+                        }
+                        else {
+                            $eventTrigger.addClass('active');
+                            $eventTrigger.siblings('.active').removeClass('active');
+                        }
+
+                        _self.parse();
+                    }
+                }
+            });
         },
         init: function(){
             var _self = this;
@@ -143,7 +533,9 @@
                 url: '/georeport/v2/requests.xml',
                 success: function(res){
                     _self.res = res;
+                    _self.hooks();
                     _self.parse();
+                    _self.inited = true;
                 }
             });
         }
@@ -152,7 +544,7 @@
     $(document).ready(function(){
         HomePageStats.init();
         ChartsPage.init();
-        
+
         $('.field-label').addClass('label');
 
         $('.geolocation-address-geocode, .geolocation-client-location, .geolocation-remove').addClass('btn');
