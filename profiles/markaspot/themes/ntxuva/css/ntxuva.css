@@ -289,7 +289,9 @@ body.page-map {
 
 .row.map-tools aside {
   width: 320px;
-  margin: 20px 100px;
+  /*margin: 20px 100px;*/
+  position: relative;
+  z-index: 9;
 }
 
 .page-map .navbar-inner,
